@@ -1,0 +1,60 @@
+CREATE DOMAIN uloga_korisnika AS VARCHAR(30)
+    CHECK (VALUE IN ('ADMIN', 'OSIGURANIK'));
+
+CREATE DOMAIN primarna_upotreba AS VARCHAR(30)
+    CHECK (VALUE IN ('LICNA', 'POSLOVNA', 'DOSTAVLJACKA'));
+
+CREATE TABLE Korisnik (
+    Id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    Ime VARCHAR(30) NOT NULL,
+    Prezime VARCHAR(30) NOT NULL,
+    JMBG CHAR(13) NOT NULL UNIQUE,
+    Imejl VARCHAR(30) NOT NULL,
+    Adresa VARCHAR(50) NOT NULL,
+    Uloga uloga_korisnika NOT NULL,
+    Telefon BIGINT NOT NULL,
+    BrVozackeDozvole CHAR(9) NOT NULL UNIQUE,
+    LozinkaHash VARCHAR(512) NOT NULL,
+    LozinkaSalt VARCHAR(512) NOT NULL
+);
+
+CREATE TABLE Motocikl (
+    Id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    BrendModel VARCHAR(30) NOT NULL,
+    GodinaProizvodnje INT NOT NULL CHECK (GodinaProizvodnje BETWEEN 1999 AND 2026),
+    BrSaobracajneDozvole CHAR(6) NOT NULL UNIQUE,
+    PrimarnaUpotreba primarna_upotreba NOT NULL,
+    KorisnikId UUID NOT NULL UNIQUE,
+    
+    CONSTRAINT fk_motocikl_korisnik 
+        FOREIGN KEY (KorisnikId) 
+        REFERENCES Korisnik(Id) 
+        ON UPDATE CASCADE 
+        ON DELETE CASCADE
+);
+
+CREATE TABLE TipOsiguranja (
+    Id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    NazivOsiguranja VARCHAR(30) NOT NULL,
+    BaznaPremija NUMERIC(10, 2) NOT NULL CHECK (BaznaPremija >= 0)
+);
+
+CREATE TABLE Osiguranje (
+    Id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    BrPolise CHAR(9) NOT NULL UNIQUE,
+    GodisnjaPremija NUMERIC(10, 2) NOT NULL CHECK (GodisnjaPremija >= 0),
+    MotociklId UUID NOT NULL,
+    TipOsiguranjaId UUID NOT NULL,
+    
+    CONSTRAINT fk_osiguranje_motocikl 
+        FOREIGN KEY (MotociklId) 
+        REFERENCES Motocikl(Id) 
+        ON UPDATE CASCADE 
+        ON DELETE RESTRICT,
+        
+    CONSTRAINT fk_osiguranje_tip 
+        FOREIGN KEY (TipOsiguranjaId) 
+        REFERENCES TipOsiguranja(Id) 
+        ON UPDATE RESTRICT 
+        ON DELETE RESTRICT
+);

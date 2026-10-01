@@ -1,0 +1,243 @@
+CREATE OR REPLACE VIEW vw_MotociklPodaci AS
+SELECT 
+    m.Id AS MotociklId,
+    m.BrendModel,
+    m.GodinaProizvodnje,
+    m.BrSaobracajneDozvole,
+    m.PrimarnaUpotreba,
+    m.KorisnikId
+FROM Motocikl m;
+
+CREATE OR REPLACE FUNCTION spDajMotociklPoKorisnikId(p_KorisnikId UUID)
+RETURNS TABLE (
+    Id UUID,
+    BrendModel VARCHAR(30),
+    GodinaProizvodnje INT,
+    BrSaobracajneDozvole CHAR(6),
+    PrimarnaUpotreba primarna_upotreba
+) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        m.Id,
+        m.BrendModel,
+        m.GodinaProizvodnje,
+        m.BrSaobracajneDozvole,
+        m.PrimarnaUpotreba
+    FROM Motocikl m
+    WHERE m.KorisnikId = p_KorisnikId;
+END;
+$$;
+
+CREATE OR REPLACE VIEW vw_PoliseZaMotocikl AS
+SELECT 
+    o.MotociklId AS MotociklId,
+    o.BrPolise,
+    t.NazivOsiguranja,
+    o.GodisnjaPremija
+FROM Osiguranje o
+INNER JOIN TipOsiguranja t ON o.TipOsiguranjaId = t.Id;
+
+CREATE OR REPLACE FUNCTION spDajPoliseZaMotocikl(p_MotociklId UUID)
+RETURNS TABLE (
+    TipOsiguranjaId UUID,
+    BrPolise CHAR(9),
+    NazivOsiguranja VARCHAR(30),
+    GodisnjaPremija NUMERIC(10, 2)
+) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        o.TipOsiguranjaId,
+        o.BrPolise,
+        t.NazivOsiguranja,
+        o.GodisnjaPremija
+    FROM Osiguranje o
+    INNER JOIN TipOsiguranja t ON o.TipOsiguranjaId = t.Id
+    WHERE o.MotociklId = p_MotociklId;
+END;
+$$;
+
+CREATE OR REPLACE VIEW vw_OsiguranjePodaci AS
+SELECT 
+    o.Id AS OsiguranjeId,
+    o.BrPolise,
+    o.GodisnjaPremija,
+    o.MotociklId,
+    o.TipOsiguranjaId,
+    t.NazivOsiguranja,
+    t.BaznaPremija
+FROM Osiguranje o
+INNER JOIN TipOsiguranja t ON o.TipOsiguranjaId = t.Id;
+
+CREATE OR REPLACE FUNCTION spDajOsiguranjePoId(p_OsiguranjeId UUID)
+RETURNS TABLE (
+    Id UUID,
+    BrPolise CHAR(9),
+    GodisnjaPremija NUMERIC(10, 2),
+    MotociklId UUID,
+    TipOsiguranjaId UUID,
+    NazivOsiguranja VARCHAR(30)
+) 
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        o.Id,
+        o.BrPolise,
+        o.GodisnjaPremija,
+        o.MotociklId,
+        o.TipOsiguranjaId,
+        t.NazivOsiguranja
+    FROM Osiguranje o
+    INNER JOIN TipOsiguranja t ON o.TipOsiguranjaId = t.Id
+    WHERE o.Id = p_OsiguranjeId;
+END;
+$$;
+
+-- SKLADISTENE PROCEDURE
+
+CREATE OR REPLACE PROCEDURE spDodajKorisnika(
+    p_Ime VARCHAR(30),
+    p_Prezime VARCHAR(30),
+    p_JMBG CHAR(13),
+    p_Imejl VARCHAR(30),
+    p_Adresa VARCHAR(50),
+    p_Uloga uloga_korisnika,
+    p_Telefon BIGINT,
+    p_BrVozackeDozvole CHAR(9),
+    p_LozinkaHash VARCHAR(512),
+    p_LozinkaSalt VARCHAR(512)
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO Korisnik (
+        Ime, Prezime, JMBG, Imejl, Adresa, Uloga, 
+        Telefon, BrVozackeDozvole, LozinkaHash, LozinkaSalt
+    )
+    VALUES (
+        p_Ime, p_Prezime, p_JMBG, p_Imejl, p_Adresa, p_Uloga, 
+        p_Telefon, p_BrVozackeDozvole, p_LozinkaHash, p_LozinkaSalt
+    );
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE spObrisiKorisnika(
+    p_Id UUID
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    DELETE FROM Korisnik
+    WHERE Id = p_Id;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE spDodajMotocikl(
+    p_BrendModel VARCHAR(30),
+    p_GodinaProizvodnje INT,
+    p_BrSaobracajneDozvole CHAR(6),
+    p_PrimarnaUpotreba primarna_upotreba,
+    p_KorisnikId UUID
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO Motocikl (BrendModel, GodinaProizvodnje, BrSaobracajneDozvole, PrimarnaUpotreba, KorisnikId)
+    VALUES (p_BrendModel, p_GodinaProizvodnje, p_BrSaobracajneDozvole, p_PrimarnaUpotreba, p_KorisnikId);
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE spIzmeniMotocikl(
+    p_Id UUID,
+    p_BrendModel VARCHAR(30),
+    p_GodinaProizvodnje INT,
+    p_BrSaobracajneDozvole CHAR(6),
+    p_PrimarnaUpotreba primarna_upotreba
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE Motocikl
+    SET 
+        BrendModel = p_BrendModel,
+        GodinaProizvodnje = p_GodinaProizvodnje,
+        BrSaobracajneDozvole = p_BrSaobracajneDozvole,
+        PrimarnaUpotreba = p_PrimarnaUpotreba
+    WHERE Id = p_Id;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE spObrisiMotocikl(
+    p_Id UUID
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    DELETE FROM Motocikl
+    WHERE Id = p_Id;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE spDodajOsiguranje(
+    p_BrPolise CHAR(9),
+    p_GodisnjaPremija NUMERIC(10, 2),
+    p_MotociklId UUID,
+    p_TipOsiguranjaId UUID
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO Osiguranje (BrPolise, GodisnjaPremija, MotociklId, TipOsiguranjaId)
+    VALUES (p_BrPolise, p_GodisnjaPremija, p_MotociklId, p_TipOsiguranjaId);
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE spIzmeniOsiguranje(
+    p_Id UUID,
+    p_BrPolise CHAR(9),
+    p_GodisnjaPremija NUMERIC(10, 2),
+    p_MotociklId UUID,
+    p_TipOsiguranjaId UUID
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE Osiguranje
+    SET 
+        BrPolise = p_BrPolise,
+        GodisnjaPremija = p_GodisnjaPremija,
+        MotociklId = p_MotociklId,
+        TipOsiguranjaId = p_TipOsiguranjaId
+    WHERE Id = p_Id;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE spObrisiOsiguranje(
+    p_Id UUID
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    DELETE FROM Osiguranje
+    WHERE Id = p_Id;
+END;
+$$;
+
+CREATE OR REPLACE PROCEDURE spDodajTipOsiguranja(
+    p_NazivOsiguranja VARCHAR(30),
+    p_BaznaPremija NUMERIC(10, 2)
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    INSERT INTO TipOsiguranja (NazivOsiguranja, BaznaPremija)
+    VALUES (p_NazivOsiguranja, p_BaznaPremija);
+END;
+$$;
