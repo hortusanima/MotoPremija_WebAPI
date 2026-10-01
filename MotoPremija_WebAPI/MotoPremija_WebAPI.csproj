@@ -9,7 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DocxTemplater" Version="2.9.7" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.21.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
@@ -19,6 +24,10 @@
     <ProjectReference Include="..\MotoPremija_WebAPI.SlojPodataka\MotoPremija_WebAPI.SlojPodataka.csproj" />
     <ProjectReference Include="..\MotoPremija_WebAPI.SlojPoslovneLogike\MotoPremija_WebAPI.SlojPoslovneLogike.csproj" />
     <ProjectReference Include="..\MotoPremija_WebAPI.SlojServisa\MotoPremija_WebAPI.SlojServisa.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Polise\" />
   </ItemGroup>
 
 </Project>

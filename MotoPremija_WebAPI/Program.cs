@@ -76,6 +76,7 @@ builder.Services.AddScoped<ObrisiMotociklServis>();
 
 builder.Services.AddScoped<VratiSvaOsiguranjaServis>();
 builder.Services.AddScoped<KreirajOsiguranjeServis>();
+builder.Services.AddScoped<GenerisiPolisuOsiguranjaServis>();
 
 builder.Services.AddScoped<VratiTipoveOsiguranjaServis>();
 
@@ -87,11 +88,22 @@ builder.Services.AddScoped<FunkcijeJWTokena>();
 
 builder.Services.AddControllers(opcije =>
 {
-    //opcije.Filters
-    //    .Add(typeof(Filter_ResiIzuzetakServerskeGreske));
+    opcije.Filters
+        .Add(typeof(Filter_ResiIzuzetakServerskeGreske));
     opcije.Filters
         .Add(typeof(Filter_ResiIzuzetakSaPovezivanjemPodataka));
 });
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 
 builder.Services.AddEndpointsApiExplorer();
 
@@ -129,6 +141,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors();
+
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

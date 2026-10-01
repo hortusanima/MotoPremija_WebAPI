@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using MotoPremija_WebAPI.PomocneFunkcije;
 using MotoPremija_WebAPI.SlojPoslovneLogike.Interfejsi.ADO;
 using MotoPremija_WebAPI.SlojPoslovneLogike.Interfejsi.EFCore;
-using MotoPremija_WebAPI.SlojServisa.Modeli_DTO.Korisnik;
 using MotoPremija_WebAPI.SlojServisa.Modeli_DTO.Motocikl;
 using System.Security.Claims;
 
@@ -45,6 +44,8 @@ namespace MotoPremija_WebAPI.Filteri.MotociklFilteri
 
             var korisnik = await _korisnikRepozitorijum
                 .VratiPoIdAsync(Guid.Parse(korisnikId));
+
+            var test = korisnik.Ime;
 
             var korisnikovMotocikl = await _motociklADORepozitorijum
                 .VratiPoKorisnikIdAsync(korisnik.Id);

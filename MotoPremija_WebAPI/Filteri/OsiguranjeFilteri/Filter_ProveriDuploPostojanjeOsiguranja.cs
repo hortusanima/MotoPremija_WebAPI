@@ -57,10 +57,10 @@ namespace MotoPremija_WebAPI.Filteri.OsiguranjeFilteri
 
             foreach(var osiguranje in svaOsiguranja)
             {
-                var tip = _tipOsiguranjaRepozitorijum
+                var tip = await _tipOsiguranjaRepozitorijum
                     .VratiPoIdAsync(osiguranje.TipOsiguranjaId);
 
-                if(tip != null)
+                if(tip.NazivOsiguranja == tipOsiguranja)
                 {
                     postoji = true;
                     break;

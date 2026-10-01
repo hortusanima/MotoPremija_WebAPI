@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MotoPremija_WebAPI.Filteri.MotociklFilteri;
 using MotoPremija_WebAPI.Filteri.OsiguranjeFilteri;
+using MotoPremija_WebAPI.Filteri.TipOsiguranjaFilteri;
 using MotoPremija_WebAPI.SlojServisa.Servisi.OsiguranjeServisi;
 
 namespace MotoPremija_WebAPI.Kontroleri
@@ -12,13 +13,16 @@ namespace MotoPremija_WebAPI.Kontroleri
     {
         private readonly VratiSvaOsiguranjaServis _vratiSvaOsiguranjaServis;
         private readonly KreirajOsiguranjeServis _kreirajOsiguranjeServis;
+        private readonly GenerisiPolisuOsiguranjaServis _generisiPolisuOsiguranjaServis;
 
         public OsiguranjeKontroler(
             VratiSvaOsiguranjaServis vratiSvaOsiguranjaServis,
-            KreirajOsiguranjeServis kreirajOsiguranjeServis)
+            KreirajOsiguranjeServis kreirajOsiguranjeServis,
+            GenerisiPolisuOsiguranjaServis generisiPolisuOsiguranjaServis)
         {
             _vratiSvaOsiguranjaServis = vratiSvaOsiguranjaServis;
             _kreirajOsiguranjeServis = kreirajOsiguranjeServis;
+            _generisiPolisuOsiguranjaServis = generisiPolisuOsiguranjaServis;
         }
 
         [HttpGet]
@@ -34,6 +38,7 @@ namespace MotoPremija_WebAPI.Kontroleri
         [HttpPost]
         [Authorize]
         [TypeFilter(typeof(Filter_ProveriDaLiMotociklPostoji))]
+        [TypeFilter(typeof(Filter_ProveriNazivTipaOsiguranja))]
         [TypeFilter(typeof(Filter_ProveriDuploPostojanjeOsiguranja))]
         public async Task<IActionResult> KreirajOsiguranje([FromBody] string tipOsiguranja)
         {
@@ -44,9 +49,14 @@ namespace MotoPremija_WebAPI.Kontroleri
 
         [HttpPost("dokument")]
         [Authorize]
-        public async Task<IActionResult> KreirajDokument()
+        [TypeFilter(typeof(Filter_ProveriDaLiMotociklPostoji))]
+        public async Task<IActionResult> KreirajDokument([FromBody] string brPolise)
         {
-            return Ok();
+            string imeFajla = await _generisiPolisuOsiguranjaServis.Generisi(brPolise);
+
+            string downloadUrl = $"{Request.Scheme}://{Request.Host}/polise/{imeFajla}";
+
+            return Ok(new { DownloadUrl = downloadUrl });
         }
     }
 }
