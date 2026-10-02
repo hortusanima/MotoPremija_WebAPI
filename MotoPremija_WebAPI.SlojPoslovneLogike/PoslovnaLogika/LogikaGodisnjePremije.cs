@@ -1,4 +1,6 @@
 ﻿
+using System.Xml.Linq;
+
 namespace MotoPremija_WebAPI.SlojPoslovneLogike.PoslovnaLogika
 {
     public class LogikaGodisnjePremije
@@ -14,11 +16,13 @@ namespace MotoPremija_WebAPI.SlojPoslovneLogike.PoslovnaLogika
             double taksaUpotrebe
         )
         {
+            string putanjaDoDatoteke = Path.Combine(AppContext.BaseDirectory, "PoslovnaLogika", "PoslovniParametri.xml");
+            XDocument xmlDok = XDocument.Load(putanjaDoDatoteke);
             _mesecnaNetoPremija = mesecnaNetoPremija;
             _faktorStarosti = faktorStarosti;
             _taksaUpotrebe = taksaUpotrebe;
-            _mesecnaTaksa = 200;
-            _agentskaKomisija = 1.1;
+            _mesecnaTaksa = double.Parse(xmlDok.Root.Element("MesecnaTaksa").Value);
+            _agentskaKomisija = double.Parse(xmlDok.Root.Element("AgentskaKomisija").Value);
         }
 
         public double IzracunajGodisnjuPremiju()

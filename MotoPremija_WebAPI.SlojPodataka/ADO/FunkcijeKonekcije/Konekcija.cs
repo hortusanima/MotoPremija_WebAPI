@@ -1,36 +1,15 @@
-﻿using Npgsql;
-using System.Data;
-
-namespace MotoPremija_WebAPI.SlojPodataka.ADO.FunkcijeKonekcije
+﻿namespace MotoPremija_WebAPI.SlojPodataka.ADO.FunkcijeKonekcije
 {
-    public class Konekcija(string konekcioniString)
+    public class Konekcija : BaznaKonekcija
     {
-        private NpgsqlConnection _konekcija;
-        private readonly string _konekcioniString = konekcioniString;
-
-        public async Task<bool> OtvoriKonekcijuAsync()
+        public Konekcija(string konekcioniString) : base(konekcioniString)
         {
-            try
-            {
-                _konekcija = new NpgsqlConnection(_konekcioniString);
-                await _konekcija.OpenAsync();
-                return true;
-            }
-            catch
-            {
-                return false;
-            }
         }
-
-        public NpgsqlConnection DajKonekciju() => _konekcija;
-
-        public async Task ZatvoriKonekcijuAsync()
+        public override async Task ZatvoriKonekcijuAsync()
         {
-            if (_konekcija != null && _konekcija.State == ConnectionState.Open)
-            {
-                await _konekcija.CloseAsync();
-                await _konekcija.DisposeAsync();
-            }
+            await base.ZatvoriKonekcijuAsync();
+
+            _konekcija = null;
         }
     }
 }

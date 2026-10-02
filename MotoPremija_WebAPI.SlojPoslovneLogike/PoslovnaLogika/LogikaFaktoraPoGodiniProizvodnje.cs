@@ -1,4 +1,6 @@
 ﻿
+using System.Xml.Linq;
+
 namespace MotoPremija_WebAPI.SlojPoslovneLogike.PoslovnaLogika
 {
     public class LogikaFaktoraPoGodiniProizvodnje
@@ -7,13 +9,15 @@ namespace MotoPremija_WebAPI.SlojPoslovneLogike.PoslovnaLogika
         private readonly Dictionary<string, double> _faktoriStarosti;
         public LogikaFaktoraPoGodiniProizvodnje(int godina)
         {
+            string putanjaDoDatoteke = Path.Combine(AppContext.BaseDirectory, "PoslovnaLogika", "PoslovniParametri.xml");
+            XDocument xmlDok = XDocument.Load(putanjaDoDatoteke);
             _godina = godina;
             _faktoriStarosti = new Dictionary<string, double> 
             {
-                { "STAR", 2 },
-                { "SREDNJI", 1.6 },
-                { "MLAD", 1.2},
-                { "NOV", 1 }
+                { "STAR", double.Parse(xmlDok.Root.Element("FaktorStarostiStar").Value) },
+                { "SREDNJI", double.Parse(xmlDok.Root.Element("FaktorStarostiSrednji").Value) },
+                { "MLAD", double.Parse(xmlDok.Root.Element("FaktorStarostiMlad").Value)},
+                { "NOV", double.Parse(xmlDok.Root.Element("FaktorStarostiNov").Value) }
             };
 
         }

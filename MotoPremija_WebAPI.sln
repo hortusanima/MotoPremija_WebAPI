@@ -5,6 +5,12 @@ VisualStudioVersion = 17.12.35514.174 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotoPremija_WebAPI", "MotoPremija_WebAPI\MotoPremija_WebAPI.csproj", "{FE9031F4-C911-49DD-87CC-252BF5323EBC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotoPremija_WebAPI.SlojPodataka", "MotoPremija_WebAPI.SlojPodataka\MotoPremija_WebAPI.SlojPodataka.csproj", "{75F9004D-7ABB-4E22-B08D-E8EAA26D4F97}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotoPremija_WebAPI.SlojPoslovneLogike", "MotoPremija_WebAPI.SlojPoslovneLogike\MotoPremija_WebAPI.SlojPoslovneLogike.csproj", "{85C0FDA0-9877-47E4-912D-F215C70C5758}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MotoPremija_WebAPI.SlojServisa", "MotoPremija_WebAPI.SlojServisa\MotoPremija_WebAPI.SlojServisa.csproj", "{E2DC713F-1C91-4EE4-BCF2-DB5D899F0278}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{FE9031F4-C911-49DD-87CC-252BF5323EBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FE9031F4-C911-49DD-87CC-252BF5323EBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FE9031F4-C911-49DD-87CC-252BF5323EBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{75F9004D-7ABB-4E22-B08D-E8EAA26D4F97}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{75F9004D-7ABB-4E22-B08D-E8EAA26D4F97}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{75F9004D-7ABB-4E22-B08D-E8EAA26D4F97}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{75F9004D-7ABB-4E22-B08D-E8EAA26D4F97}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85C0FDA0-9877-47E4-912D-F215C70C5758}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85C0FDA0-9877-47E4-912D-F215C70C5758}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85C0FDA0-9877-47E4-912D-F215C70C5758}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85C0FDA0-9877-47E4-912D-F215C70C5758}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E2DC713F-1C91-4EE4-BCF2-DB5D899F0278}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E2DC713F-1C91-4EE4-BCF2-DB5D899F0278}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E2DC713F-1C91-4EE4-BCF2-DB5D899F0278}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E2DC713F-1C91-4EE4-BCF2-DB5D899F0278}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

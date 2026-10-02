@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<PoslovniParametri>
+	<FaktorStarostiStar>2</FaktorStarostiStar>
+	<FaktorStarostiSrednji>1.6</FaktorStarostiSrednji>
+	<FaktorStarostiMlad>1.2</FaktorStarostiMlad>
+	<FaktorStarostiNov>1</FaktorStarostiNov>
+	<TaksaUpotrebeLicna>0</TaksaUpotrebeLicna>
+	<TaksaUpotrebePoslovna>2500</TaksaUpotrebePoslovna>
+	<TaksaUpotrebeDostavljacka>3500</TaksaUpotrebeDostavljacka>
+	<MesecnaTaksa>200</MesecnaTaksa>
+	<AgentskaKomisija>1.1</AgentskaKomisija>
+</PoslovniParametri>
